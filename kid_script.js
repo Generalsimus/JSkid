@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.0.3 (c) 
+    v1.0.3 (c) soso
     MIT License
 */
 var kid_css = {
