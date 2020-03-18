@@ -382,8 +382,7 @@ function KD_el(r) {
                             }
 
                         }
-                        console.log(KD_ROUter)
-                        console.log(KD_ROUterswitchs)
+                        
                         window.history.pushState(r.href, 'Title', r.href);
                     }
                 }
