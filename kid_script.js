@@ -39,8 +39,8 @@ var KD_method = {
     },
     m: function (a) {
         KD_map(a, function (v) {
-            
-            if (typeof v[1]== "string") {
+
+            if (typeof v[1] == "string") {
                 this.setAttribute(v[0], v[1])
             }
         }.bind(this))
@@ -130,7 +130,6 @@ var KD_method = {
         return z;
     },
     a: function (s) {
-
         this.appendChild(s)
         return s;
     },
@@ -382,7 +381,7 @@ function KD_el(r) {
                             }
 
                         }
-                        
+
                         window.history.pushState(r.href, 'Title', r.href);
                     }
                 }
@@ -398,7 +397,7 @@ function KD_el(r) {
             KD_map(r.router, function (tag) {
                 var routeMatcher = new RegExp(tag.to.replace(/:[^\s/]+/g, '([\\w-]+)'));
                 if (routeMatcher.test(document.location.pathname)) {
-                    console.log(tag)
+
                     parent.a(KD_el(tag))
                 }
                 KD_ROUter[tag.to] ? KD_ROUter[tag.to].push({ p: parent, dom: tag }) : KD_ROUter[tag.to] = [{ p: parent, dom: tag }]
