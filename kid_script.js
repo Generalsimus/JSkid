@@ -8,12 +8,14 @@
 var KD_css = {
 
 
-},
+    },
     KD_group = {},
     KD_cssselector = 'KD_css_';
+
 function KD_type(a) {
     return Object.prototype.toString.call(a).match(/(\w)\w+/g)[1]
 }
+
 function KD_map(val, fun) {
 
     if (val.length && typeof val.length == "number") {
@@ -232,13 +234,19 @@ var KD_method = {
         this.o().insertBefore(o, this);
     }
 }
-try {
-    Object.assign(HTMLElement.prototype, KD_method)
-} catch (error) {
-    KD_map(KD_method, function (method, key) {
-        HTMLElement.prototype[key] = method
-    })
+
+function KD_assign(obj1, obj2) {
+    try {
+        obj1 = Object.assign(obj1, obj2)
+    } catch (error) {
+        KD_map(obj2, function (method, key) {
+            obj1[key] = method
+        })
+    }
+    return obj1;
 }
+KD_assign(HTMLElement.prototype, KD_method)
+
 var KD_style = KD_T(document.head, [{
     style: [],
 }]).z;
@@ -310,25 +318,31 @@ function KD_k(r, c) {
 
 // }
 KD_ROUter = {};
-KD_ROUterswitchs = {};
+function KD_routeReG(defURL){
+    for (var url in KD_ROUter) {
+
+        if (KD_ROUter[url][0].test(defURL)) {
+
+            KD_map(KD_ROUter[url][1], function (v) {
+                v.p.i(' ')
+
+                v.p.a(v.dom instanceof HTMLElement ? v.dom : KD_el(v.dom))
+            })
+
+
+        }
+
+    }
+}
 
 window.addEventListener('popstate', function (e) {
     console.log("location: " + document.location + ", state: " + JSON.stringify(e.state));
 
-    for (var reg in KD_ROUter) {
-
-        if (new RegExp(reg.replace(/:[^\s/]+/g, '([\\w-]+)')).test(document.location.pathname)) {
-
-            KD_map(KD_ROUter[reg], function (v) {
-                v.p.i(' ')
-                KD_type(v.dom) == "Object" ? v.dom = KD_el(v.dom) : v.dom
-                v.p.a(v.dom)
-            })
-        }
-    }
+    KD_routeReG(document.location.pathname)
 
     //  console.log(KD_ROUterHistory[document.location.pathname])
 });
+
 function KD_el(r) {
     var domK = Object.keys(r)
 
@@ -350,7 +364,8 @@ function KD_el(r) {
 
             }
         })
-        KD_T(o, r[name])
+
+        KD_T(o, r[domK[0]])
         return o;
     }
 
@@ -361,59 +376,72 @@ function KD_el(r) {
         s: ['span', KD_dom],
         switch: ['a', function (name) {
             var a = Object.assign({
-                a: r.switch, e: {
+                a: r.switch,
+                e: {
                     click: function (e) {
                         e.preventDefault()
-                        //   KD_ROUterHistory[r.href] = []
-                        for (var url in KD_ROUter) {
-                            var routeMatcher = new RegExp(url.replace(/:[^\s/]+/g, '([\\w-]+)'));
-                            if (routeMatcher.test(r.href)) {
 
-                                KD_map(KD_ROUter[url], function (v) {
-                                    v.p.i(' ')
-                                    if (KD_type(v.dom) == 'Object') {
-                                        v.dom = KD_el(v.dom)
-                                    }
-                                    v.p.a(v.dom)
-                                })
-
-
-                            }
-
-                        }
-
+                        KD_routeReG(r.href)
+                        
                         window.history.pushState(r.href, 'Title', r.href);
                     }
                 }
             }, r)
 
             delete a.switch
-            KD_ROUterswitchs[a.href] = a
+
             return KD_el(a)
         }],
         router: ["div", function (name) {
-            var parent = KD_el({ div: [] })
+
+            var parent = KD_assign({
+                div: []
+            }, r);
+            delete parent.router
+
+            parent = KD_el(parent)
 
             KD_map(r.router, function (tag) {
-                var routeMatcher = new RegExp(tag.to.replace(/:[^\s/]+/g, '([\\w-]+)'));
-                if (routeMatcher.test(document.location.pathname)) {
-
-                    parent.a(KD_el(tag))
+                var dompush = {
+                    p: parent,
+                    dom: tag
+                };
+                KD_ROUter[tag.to] ? KD_ROUter[tag.to][1].push(dompush) : KD_ROUter[tag.to] = [
+                    (function (regexlist, rgxURL) {
+                        regexlist.forEach(function (v) {
+                            rgxURL = rgxURL.replace(v[0], v[1])
+                        })
+                        return new RegExp('^' + rgxURL + '$', 'i');
+                    })([
+                        [/[\-{}\[\]+?.,\\\^$|#\s]/g, '\\$&'],
+                        [/\((.*?)\)/g, '(?:$1)?'],
+                        [/(\(\?)?:\w+/g, function (match, optional) {
+                            return optional ? match : '([^\/]+)';
+                        }],
+                        [/\*\w+/g, '(.*?)']
+                    ], tag.to), [dompush]
+                ];
+                if (KD_ROUter[tag.to][0].test(document.location.pathname)) {
+                    dompush.dom = KD_el(tag)
+                    parent.a(dompush.dom)
                 }
-                KD_ROUter[tag.to] ? KD_ROUter[tag.to].push({ p: parent, dom: tag }) : KD_ROUter[tag.to] = [{ p: parent, dom: tag }]
+
+
             })
 
             return parent
         }]
     }
 
-    return tags[domK[0]] ? tags[domK[0]][1](tags[domK[0]][1]) : KD_dom(domK[0])
+    return tags[domK[0]] ? tags[domK[0]][1](tags[domK[0]][0]) : KD_dom(domK[0])
 }
+
 function KD_T(p, s) {
     switch (KD_type(s)) {
         case "Array":
             KD_map(s, function (r) {
-                p.a(KD_el(r))
+
+                p.appendChild(KD_el(r))
             })
             break;
         case "Function":
