@@ -158,36 +158,30 @@ var KD_method = {
         return b;
     },
     w: function (a) {
+        // [1025,tag,"in"]
 
 
-        KD_map(a, function (v, k) {
+        var p = a[2] == "in" ? this : a[1],
+            c = a[2] == "in" ? a[1] : this,
+            l = null,
+            o = null;
 
-            KD_map(v, function (s, b) {
-                var l = 0,
-                    o = 0;
+        function m() {
+            if (window.innerWidth <= a[0]) {
+                if (c.o() !== p) {
+                    var n = c.n();
+                    l = n ? c.n() : c.o();
+                    o = n ? "u" : "a";
 
-                function c() {
-
-
-                    if (window.innerWidth <= s && !l) {
-
-                        if (k == 'in') {
-                            l = KD_group[b].o()[KD_group[b].n() ? 'insertBefore' : 'a'].bind(KD_group[b].o())
-                            p.appendChild(KD_group[b])
-                        }
-                        console.log('resizes dros appen chaildi ar mushaobs kargad in da outi araaa damatebuli')
-                    } else if (l) {
-                        l(KD_group[b])
-                        l = 0;
-                    }
+                    p.a(c)
                 }
-                c();
 
-                window.addEventListener("resize", c)
-
-            })
-
-        })
+            } else if (l) {
+                l[o](c)
+            }
+        }
+        m()
+        window.addEventListener("resize", m)
 
 
 
@@ -206,6 +200,13 @@ var KD_method = {
     },
     u: function (o) {
         this.o().insertBefore(o, this);
+    },
+    restart: function (v) {
+        var n = this.n(),
+            o = n ? this : this.o();
+        o[n ? "u" : "a"](KD_el(v ? v : this.KD_OB))
+        this.r()
+
     }
 }
 
@@ -302,7 +303,7 @@ function KD_routeReG(test) {
 
             if (el[0].test(test)) {
                 el[1].dom = el[1].dom instanceof HTMLElement ? el[1].dom : KD_el(el[1].dom);
-
+                window.scrollTo(0, 0);
                 if (el[1].p.h(0) !== el[1].dom) {
                     el[1].p.i(' ');
                     el[1].p.a(el[1].dom);
@@ -329,6 +330,7 @@ function KD_el(r, p) {
         var a = document.createElement(name);
 
         KD_T(a, r[domK[0]])
+        a.KD_OB = r
 
         for (var i in r) {
             if (i !== domK[0]) {
