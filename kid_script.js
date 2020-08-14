@@ -1,15 +1,12 @@
 /*! KID.js 
-    v1.0.5 (c) soso
+    v1.1.0 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
 
 */
-var KD_css = {
-
-
-    },
-    KD_group = {},
+var KD_group = {},
+    KD_I = Math.round(Math.random() * 100),
     KD_cssselector = 'KD_css_';
 
 function KD_type(a) {
@@ -54,36 +51,38 @@ var KD_method = {
 
     c: function (j) {
 
-        var v = function (j) {
+        // KD_style
+        // DISABLE
+        // var v = function (j) {
 
-            switch (KD_type(j)) {
-                case 'Array':
-                    KD_map(j, v);
-                    break;
-                case 'Number':
-                    var c = KD_c(j);
+        //     switch (KD_type(j)) {
+        //         case 'Array':
+        //             KD_map(j, v);
+        //             break;
+        //         case 'Number':
+        //             var c = KD_c(j);
 
-                    KD_csap(KD_k('.' + c, KD_css[j]))
-                    this.classList.add(c);
-                    break;
-                case 'String':
-                    this.classList.add(j);
-                    break;
-                case 'Object':
-                    KD_map(j, function (j, i) {
-                        var c = KD_c(i);
+        //             KD_csap(KD_k('.' + c, KD_css[j]))
+        //             this.classList.add(c);
+        //             break;
+        //         case 'String':
+        //             this.classList.add(j);
+        //             break;
+        //         case 'Object':
+        //             KD_map(j, function (j, i) {
+        //                 var c = KD_c(i);
 
-                        KD_csap(KD_k('.' + c + j, KD_css[i]))
+        //                 KD_csap(KD_k('.' + c + j, KD_css[i]))
 
-                        this.classList.add(c);
-                    });
-                    break;
-            }
-        }.bind(this)
+        //                 this.classList.add(c);
+        //             });
+        //             break;
+        //     }
+        // }.bind(this)
 
-        v(j)
+        // v(j)
 
-        return this;
+        // return this;
 
 
     },
@@ -97,6 +96,7 @@ var KD_method = {
     },
     y: function (o) {
         return o ? KD_assign(this.style, o) : this.style;
+        // KD_style
     },
     e: function (s) {
         for (var l in s) {
@@ -227,65 +227,61 @@ var KD_style = KD_T(document.head, [{
 }]);
 
 
-function KD_csap(s) {
-    KD_style.insertAdjacentHTML("afterbegin", s)
-}
 
 
 
+// KD_map([], function (v) {
 
-KD_map([], function (v) {
 
+//     var a = KD_css[v]
+//     var css = '';
 
-    var a = KD_css[v]
-    var css = '';
+//     KD_map(a[1], function (v, i) {
 
-    KD_map(a[1], function (v, i) {
+//         css = css + KD_k(i[0] == '*' ? i.slice(1) : '.' + KD_c(i), v);
 
-        css = css + KD_k(i[0] == '*' ? i.slice(1) : '.' + KD_c(i), v);
-
-    })
-    KD_csap(a[0] + '{' + css + '}')
-})
+//     })
+//     KD_csap(a[0] + '{' + css + '}')
+// })
 
 
 
 // csssis dasagenireblad
 
-function KD_c(s, r) {
-    var d = '',
-        c = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"];
-    s = String(s)
-    for (var l = 0; l < s.length; l++) {
-        d = d + c[s[l]];
-    }
-    return (r ? r : KD_cssselector) + d;
+// function KD_c(s, r) {
+//     var d = '',
+//         c = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"];
+//     s = String(s)
+//     for (var l = 0; l < s.length; l++) {
+//         d = d + c[s[l]];
+//     }
+//     return (r ? r : KD_cssselector) + d;
 
-}
+// }
 
-function KD_k(r, c) {
-    var s = '',
-        l = '';
-
-
-    for (var a in c) {
-
-        ((a[0] == '_' || c[a][0] == '_') ? ['-webkit-', '-moz-', '-ms-', '-o-', ''] : ['']).map(function (v) {
+// function KD_k(r, c) {
+//     var s = '',
+//         l = '';
 
 
-            a[0] == '&' ? KD_map(a.slice(1).split('&'), function (v) {
-                // console.log([r + v,c[a]])
-                l = l + KD_k(r + v, c[a]);
-            }) : (s = s + (a[0] == '_' ? v : '') + a.split(/(?=[A-Z])/).join('-').replace(/_/g, '').toLowerCase() + ':' + (c[a][0] == '_' ? v + c[a].substring(1) : c[a]) + ';');
+//     for (var a in c) {
 
-        })
+//         ((a[0] == '_' || c[a][0] == '_') ? ['-webkit-', '-moz-', '-ms-', '-o-', ''] : ['']).map(function (v) {
 
 
-    }
+//             a[0] == '&' ? KD_map(a.slice(1).split('&'), function (v) {
+//                 // console.log([r + v,c[a]])
+//                 l = l + KD_k(r + v, c[a]);
+//             }) : (s = s + (a[0] == '_' ? v : '') + a.split(/(?=[A-Z])/).join('-').replace(/_/g, '').toLowerCase() + ':' + (c[a][0] == '_' ? v + c[a].substring(1) : c[a]) + ';');
 
-    return l + r + '{' + s + '}';
+//         })
 
-}
+
+//     }
+
+//     return l + r + '{' + s + '}';
+
+// }
 
 
 // switch(typeof s){
@@ -367,7 +363,7 @@ function KD_el(r, p) {
             KD_assign(r, {
                 e: {
                     click: function (e) {
-                        e.preventDefault()
+                        e.preventDefault();
 
                         window.history.pushState(r.href, 'Title', r.href);
                         KD_routeReG(r.href)
@@ -402,6 +398,7 @@ function KD_el(r, p) {
                         dom: tag
                     };
 
+                // console.log(genREGEX.exec(document.location.pathname))
 
                 if (genREGEX.test(document.location.pathname)) {
                     dompush.dom = KD_el(tag)
