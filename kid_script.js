@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.1.5 (c) soso
+    v1.1.6 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -129,9 +129,10 @@ var KD_style = KD_T(document.head, [{
     style: []
 }]);
 
-function KD_routeGeN(join, tag, genREGEX) {
-    join && tag.to.replace(/\:/g, "").match(genREGEX).forEach((function (v, i) {
-        window.location.params[v] = join[i]
+function KD_routeGeN(to, genREGEX) {
+    var split = document.location.pathname.split(genREGEX);
+    to.replace(/\:/g, "").split(genREGEX).forEach((function (v, i) {
+        window.location.params[v] = split[i]
     }))
 }
 
@@ -139,13 +140,9 @@ function KD_routeReG(test) {
     var existed = [];
     for (var url in KD_ROUter) {
         var el = KD_ROUter[url];
-        el[0][0].test(test) ? el[1].forEach(v => {
-            var join = document.location.pathname.split(el[0][0]);
-            KD_routeGeN(join, v[1], el[0][0]);
-            var nm = el[0][1] + join.join("").replace(document.location.pathname, ""),
-                dom = v[2][nm] || KD_el(v[1]);
-            v[0].i(" "), v[0].a(dom), v[2][nm] = dom, existed.push(v[0])
-        }) : el[1].forEach(v => {
+        el[0].test(test) ? (el[1].forEach((function (v) {
+            KD_routeGeN(v[1].to, el[0]), v[0].i(" "), v[0].a(v[2][document.location.pathname] || (v[2][document.location.pathname] = KD_el(v[1]))), existed.push(v[0])
+        })), window.scrollTo(0, 0)) : el[1].forEach(v => {
             existed.indexOf(v[0]) < 0 && v[0].i(" ")
         })
     }
@@ -156,9 +153,9 @@ function KD_el(r, p) {
 
     function KD_dom(name) {
         var a = document.createElement(name);
-        for (var i in KD_T(a, r[domK[0]]), a.KD_OB = r, r) i !== domK[0] && (a[i] instanceof Function ? a[i](r[i]) : a.m({
-            [i]: r[i]
-        }));
+        for (var i in a.KD_OB = r, r) i == domK[0] ? KD_T(a, r[domK[0]]) : a[i] instanceof Function ? a[i](r[i] instanceof Function ? r[i]() : r[i]) : a.m({
+            [i]: r[i] instanceof Function ? r[i]() : r[i]
+        });
         return a
     }
     var tags = {
@@ -166,7 +163,7 @@ function KD_el(r, p) {
         s: ["span", KD_dom],
         assign: [null, function () {
             var ass = r.assign;
-            for (var i in delete r.assign, ass) KD_assign(ass[i], r);
+            for (var i in ass) KD_assign(ass[i], r);
             return KD_T(p, ass.slice(0, -1)), KD_el(ass[ass.length - 1])
         }],
         switch: ["a", function (name) {
@@ -193,14 +190,12 @@ function KD_el(r, p) {
                     ], rgxURL = tag.to, regexlist.forEach((function (v) {
                         rgxURL = rgxURL.replace(v[0], v[1])
                     })), new RegExp("^" + rgxURL + "$", "i")) : new RegExp(tag.to.replace(/:[^\s/]+/g, "([\\w-]+)")),
-                    spli = document.location.pathname.split(genREGEX),
-                    join = spli.join("").replace(document.location.pathname, ""),
-                    els = [parent, tag, {}],
+                    el = [parent, tag, {}],
                     regexlist, rgxURL;
-                KD_routeGeN(spli, tag, genREGEX), KD_ROUter[genREGEX] ? KD_ROUter[genREGEX][1].push(els) : KD_ROUter[genREGEX] = {
-                    0: [genREGEX, tag.to],
-                    1: [els]
-                }, genREGEX.test(document.location.pathname) && (els[2][tag.to + join] = KD_el(tag), parent.a(els[2][tag.to + join]))
+                KD_routeGeN(tag.to, genREGEX), KD_ROUter[genREGEX] ? KD_ROUter[genREGEX][1].push(el) : KD_ROUter[genREGEX] = {
+                    0: genREGEX,
+                    1: [el]
+                }, genREGEX.test(document.location.pathname) && parent.a(el[2][document.location.pathname] = KD_el(tag))
             })), parent
         }]
     };
