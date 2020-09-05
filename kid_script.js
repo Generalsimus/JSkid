@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.1.7 (c) soso
+    v1.1.8 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -7,7 +7,8 @@
 */
 var KD_group = {},
     KD_I = Math.round(100 * Math.random()),
-    KD_cssselector = "KD_css_";
+    KD_cssselector = "KD_css_",
+    KD_ROUter = {};
 
 function KD_type(a) {
     return Object.prototype.toString.call(a).match(/(\w)\w+/g)[1]
@@ -232,9 +233,15 @@ function KD_xhr(call, link, method) {
     return xhr.open(method || "POST", link || window.location), xhr.onload = function () {
         call && call(xhr.response ? xhr.response : 0)
     }, xhr.run = function (t) {
-        "string" == typeof t && this.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;"), this.send(t)
+        switch (KD_type(t)) {
+            case "Object":
+                t = "application/json";
+            case "String":
+                t = "application/x-www-form-urlencoded"
+        }
+        this.setRequestHeader("Content-Type", t), this.send(t)
     }, xhr
 }
-KD_ROUter = {}, window.addEventListener("popstate", (function () {
+window.addEventListener("popstate", (function () {
     KD_routeReG(document.location.pathname)
 }));
