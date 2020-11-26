@@ -1,0 +1,28 @@
+{
+  "name": "kid-js-lib",
+  "version": "1.2.0",
+  "description": "JavaScript Framework",
+  "main": "kid_script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Generalsimus/JSkid.git"
+  },
+  "keywords": [
+    "jskid",
+    "kix",
+    "dom",
+    "jsdom",
+    "kix",
+    "kixdom",
+    "kixjs"
+  ],
+  "author": "soso tsertsvadze",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Generalsimus/JSkid/issues"
+  },
+  "homepage": "https://kidjs.ml"
+}
