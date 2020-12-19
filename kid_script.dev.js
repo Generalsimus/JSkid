@@ -6,7 +6,7 @@
 
 */
 
-var KD_I = {},
+var KD_I = {s:1},
   KD_VA = {};
 
 function KD_E(o, p, f) {
