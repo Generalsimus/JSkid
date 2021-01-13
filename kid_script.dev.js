@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.6 (c) soso
+    v1.2.7 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -403,20 +403,20 @@ function KD_node(createEl, type) {
           esc_reg = [/[\-{}\[\]+?.,\\\^$|#\s]/g, "\\$&"],
           to_path = (unic ? [
             esc_reg,
-            [/\((.*?)\)/g, "(?:$1)?"],
-            [/(\(\?)?:\w+/g, function (match, optional) {
-              return optional ? match : "([^/]+)"
-            }],
-            [/\*\w+/g, "(.*?)"]
+            [/:[^\s/]+/g, "([\\w-]+)"]
           ] : [
               esc_reg,
-              [/:[^\s/]+/g, "([\\w-]+)"]
+              [/\((.*?)\)/g, "(?:$1)?"],
+              [/(\(\?)?:\w+/g, function (match, optional) {
+                return optional ? match : "([^/]+)"
+              }],
+              [/\*\w+/g, "(.*?)"]
             ]
           ).reduce(function (repl, reg) {
 
             return repl.replace(reg[0], reg[1])
           }, to),
-          reg = new RegExp(unic ? "^" + to_path + "$" : to_path, "i"),
+          reg = new RegExp(unic ? to_path : "^" + to_path + "$", "i"),
           NODES = {},
           N = function (ID) {
             var loc_path = decodeURI(document.location.pathname),
