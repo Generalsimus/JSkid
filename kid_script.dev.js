@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.5 (c) soso
+    v1.2.6 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid

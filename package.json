@@ -1,6 +1,6 @@
 {
   "name": "kid-js-lib",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "JavaScript Framework",
   "main": "kid_script.js",
   "scripts": {
