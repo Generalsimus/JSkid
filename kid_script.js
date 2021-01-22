@@ -1,12 +1,12 @@
 /*! KID.js 
-    v1.2.7 (c) soso
+    v1.2.8 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
 
 */
 
-var KD_I = {};
+// var KD_I = {};
 // KD_VA = {},
 // KD_ROUter = {},
 // KD_ROUid = new Date().getTime();
@@ -226,8 +226,9 @@ var KD_method = {
   // Append
   // a
   Append: function (s) {
-    this.appendChild(KD_T(null, s));
-    return s;
+    // KD_T(this, s)
+    // this.appendChild(KD_T(null, s));
+    return KD_T(this, s);
   },
   // Remove
   // r
@@ -242,19 +243,19 @@ var KD_method = {
   },
   // Global
   // b
-  Global: function (t, n) {
-    // var b = n ? n : this;
+  // Global: function (t, n) {
+  // var b = n ? n : this;
 
-    // KD_map(t, function (v) {
-    //     if (v instanceof Array) {
-    //         KD_group[v[0]] ? KD_group[v[0]].push(b) : (KD_group[v[0]] = [b]);
-    //     } else {
-    //         KD_group[v] = b;
-    //     }
-    // });
+  // KD_map(t, function (v) {
+  //     if (v instanceof Array) {
+  //         KD_group[v[0]] ? KD_group[v[0]].push(b) : (KD_group[v[0]] = [b]);
+  //     } else {
+  //         KD_group[v] = b;
+  //     }
+  // });
 
-    return b;
-  },
+  //   return b;
+  // },
   // Mark
   // l
   Mark: function (f) {
@@ -345,10 +346,12 @@ function KD_node(createEl, type) {
         return KD_dom("a").e({
           click: function (e) {
             e.preventDefault();
-
+            window.scrollTo(0, 0);
 
             var event = document.createEvent('Event');
-            event.state = { ID: new Date().getTime() }
+            event.state = {
+              ID: new Date().getTime()
+            }
 
             history.pushState(event.state, document.title, this.getAttr('href'));
 
@@ -405,14 +408,13 @@ function KD_node(createEl, type) {
             esc_reg,
             [/:[^\s/]+/g, "([\\w-]+)"]
           ] : [
-              esc_reg,
-              [/\((.*?)\)/g, "(?:$1)?"],
-              [/(\(\?)?:\w+/g, function (match, optional) {
-                return optional ? match : "([^/]+)"
-              }],
-              [/\*\w+/g, "(.*?)"]
-            ]
-          ).reduce(function (repl, reg) {
+            esc_reg,
+            [/\((.*?)\)/g, "(?:$1)?"],
+            [/(\(\?)?:\w+/g, function (match, optional) {
+              return optional ? match : "([^/]+)"
+            }],
+            [/\*\w+/g, "(.*?)"]
+          ]).reduce(function (repl, reg) {
 
             return repl.replace(reg[0], reg[1])
           }, to),
@@ -456,7 +458,7 @@ function KD_node(createEl, type) {
   }
 
   function KD_type(a) {
-    return Object.prototype.toString.call(a).match(/(\w)\w+/g)[1];
+    return Object.prototype.toString.call(a).match(/\w+/g)[1];
   }
 
 
