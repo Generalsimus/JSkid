@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.8 (c) soso
+    v1.2.9 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -125,7 +125,7 @@ var KD_method = {
   // setAttr  
   // m
   setAttr: function () {
-    console.log(typeof arguments[0], arguments)
+    // console.log(typeof arguments[0], arguments)
 
     switch (typeof arguments[0]) {
       case "object":
@@ -143,7 +143,7 @@ var KD_method = {
         }
         break;
       case "function":
-        console.log(arguments)
+        // console.log(arguments)
         this.setAttr(arguments[0](this))
         break;
     }

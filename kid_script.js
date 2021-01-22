@@ -6,12 +6,7 @@
 
 */
 
-// var KD_I = {};
-// KD_VA = {},
-// KD_ROUter = {},
-// KD_ROUid = new Date().getTime();
 
-// window.location.params = {};
 
 function KD_E(o, p, f) {
 
@@ -125,7 +120,7 @@ var KD_method = {
   // setAttr  
   // m
   setAttr: function () {
-    console.log(typeof arguments[0], arguments)
+    // console.log(typeof arguments[0], arguments)
 
     switch (typeof arguments[0]) {
       case "object":
@@ -143,7 +138,7 @@ var KD_method = {
         }
         break;
       case "function":
-        console.log(arguments)
+        // console.log(arguments)
         this.setAttr(arguments[0](this))
         break;
     }
