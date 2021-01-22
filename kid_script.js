@@ -1,12 +1,17 @@
 /*! KID.js 
-    v1.2.8 (c) soso
+    v1.2.9 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
 
 */
 
+// var KD_I = {};
+// KD_VA = {},
+// KD_ROUter = {},
+// KD_ROUid = new Date().getTime();
 
+// window.location.params = {};
 
 function KD_E(o, p, f) {
 
@@ -344,9 +349,7 @@ function KD_node(createEl, type) {
             window.scrollTo(0, 0);
 
             var event = document.createEvent('Event');
-            event.state = {
-              ID: new Date().getTime()
-            }
+            event.state = { ID: new Date().getTime() }
 
             history.pushState(event.state, document.title, this.getAttr('href'));
 
@@ -403,13 +406,14 @@ function KD_node(createEl, type) {
             esc_reg,
             [/:[^\s/]+/g, "([\\w-]+)"]
           ] : [
-            esc_reg,
-            [/\((.*?)\)/g, "(?:$1)?"],
-            [/(\(\?)?:\w+/g, function (match, optional) {
-              return optional ? match : "([^/]+)"
-            }],
-            [/\*\w+/g, "(.*?)"]
-          ]).reduce(function (repl, reg) {
+              esc_reg,
+              [/\((.*?)\)/g, "(?:$1)?"],
+              [/(\(\?)?:\w+/g, function (match, optional) {
+                return optional ? match : "([^/]+)"
+              }],
+              [/\*\w+/g, "(.*?)"]
+            ]
+          ).reduce(function (repl, reg) {
 
             return repl.replace(reg[0], reg[1])
           }, to),
@@ -512,3 +516,6 @@ var el = KD_node(document.createElement.bind(document), "EL"),
   KD_style = KD_T(document.head, {
     style: ''
   });
+
+
+
