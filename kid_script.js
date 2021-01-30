@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.10 (c) soso
+    v1.2.11 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -320,6 +320,7 @@ function KD_node(createEl, KD_T_SVG) {
           NODE = createEl(prop);
         }
 
+        NODE.KD_OBJECT = r;
         KD_T(NODE, r[prop]);
       }
     }
