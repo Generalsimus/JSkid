@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.11 (c) soso
+    v1.2.12 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -120,7 +120,7 @@ var KD_method = {
     while (arguments[i]) {
       var attribute = arguments[i - 1],
           value = arguments[i];
-      typeof value == "function" ? this.setAttr(attribute, value(this, attribute)) : KD_method[attribute] ? this[attribute](value, attribute) : this.setAttribute(attribute, value);
+      typeof value == "function" ? this.setAttr(attribute, value(this, attribute)) : KD_method[attribute] ? this[attribute](value, attribute, this) : this.setAttribute(attribute, value);
       i++;
     }
 
@@ -191,13 +191,6 @@ var KD_method = {
   Replace: function (t) {
     this.parentNode.replaceChild(KD_(null, t), this);
     return t;
-  },
-  Mark: function (f) {
-    if (f instanceof Function) {
-      f(this);
-    }
-
-    return this;
   },
   insert: function (o, m) {
     switch (m) {
@@ -395,6 +388,16 @@ function KD_node(createEl, KD_T_SVG) {
     return arguments[0];
   };
 
+  KD_T.createElement = function (nodeName, nodeGen) {
+    KD_NODES[nodeName] = nodeGen;
+  };
+
+  KD_T.createAttribute = function (AttributeName, AttributeGen) {
+    KD_method[AttributeName] = AttributeGen;
+    Node.prototype[AttributeName] = AttributeGen;
+  };
+
+  KD_NODES;
   return KD_T;
 }
 
