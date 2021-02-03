@@ -1,109 +1,107 @@
 /*! KID.js 
-    v1.2.13 (c) soso
+    v1.2.14 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
 
 */
 function KD_G(REGISTER_NODE) {
-  var register_LIST = [],
-      EXIST_NODES;
+  return function (HTML_NODE, ATTRIBUTE) {
+    var register_LIST = [],
+        EXIST_NODES;
 
-  function get_NODES() {
-    var REGISTER_VALUE = REGISTER_NODE(register);
-    return EXIST_NODES = KD_(null, REGISTER_VALUE instanceof Array ? REGISTER_VALUE.length ? REGISTER_VALUE : [""] : [REGISTER_VALUE]);
-  }
+    function get_NODES() {
+      var REGISTER_VALUE = REGISTER_NODE(register);
+      return EXIST_NODES = KD_(null, REGISTER_VALUE instanceof Array ? REGISTER_VALUE.length ? REGISTER_VALUE : [""] : [REGISTER_VALUE]);
+    }
 
-  function register() {
-    var reduced = Array.prototype.reduce.call(arguments, function (o, prop) {
-      var value = o[prop];
-      value = typeof value == "function" ? value.bind(o) : value;
+    function register() {
+      var reduced = Array.prototype.reduce.call(arguments, function (o, prop) {
+        var value = o[prop];
+        value = typeof value == "function" ? value.bind(o) : value;
 
-      for (var reg in register_LIST) {
-        var el = register_LIST[reg];
+        for (var reg in register_LIST) {
+          var el = register_LIST[reg];
 
-        if (el.o == o && el.p == prop) {
-          return value;
-        }
-      }
-
-      register_LIST.push({
-        o: o,
-        p: prop
-      });
-      var descriptor = Object.getOwnPropertyDescriptor(o, prop);
-
-      try {
-        Object.defineProperty(o, prop, {
-          enumerable: true,
-          configurable: true,
-          get: function () {
+          if (el.o == o && el.p == prop) {
             return value;
-          },
-          set: function (new_v) {
-            value = new_v;
+          }
+        }
 
-            if (descriptor.set) {
-              descriptor.set(new_v);
-            }
+        register_LIST.push({
+          o: o,
+          p: prop
+        });
+        var descriptor = Object.getOwnPropertyDescriptor(o, prop);
 
-            if (register.ATTRIBUTE) {
-              register.HTML_NODE.setAttr(register.ATTRIBUTE, REGISTER_NODE(register));
-              return;
-            }
+        try {
+          Object.defineProperty(o, prop, {
+            enumerable: true,
+            configurable: true,
+            get: function () {
+              return value;
+            },
+            set: function (new_v) {
+              value = new_v;
 
-            var old_nodes = EXIST_NODES,
-                new_nodes = get_NODES(),
-                last_node;
+              if (descriptor.set) {
+                descriptor.set(new_v);
+              }
 
-            function Replace_nodes(old_nodes, new_nodes, old_index, new_index, old_, new_) {
-              do {
-                old_ = old_nodes[old_index];
-                new_ = new_nodes[new_index];
+              if (ATTRIBUTE) {
+                HTML_NODE.setAttr(ATTRIBUTE, REGISTER_NODE(register));
+                return;
+              }
 
-                if (old_ instanceof Array) {
-                  Replace_nodes(old_, new_nodes, 0, new_index);
-                  new_index = new_nodes.length;
-                  old_index++;
-                  continue;
-                } else if (new_ instanceof Array) {
-                  Replace_nodes(old_nodes, new_, old_index, 0);
-                  old_index = old_nodes.length;
-                  new_index++;
-                  continue;
-                } else {
-                  if (old_) {
-                    if (last_node) {
-                      last_node.Remove();
+              var old_nodes = EXIST_NODES,
+                  new_nodes = get_NODES(),
+                  last_node;
+
+              function Replace_nodes(old_nodes, new_nodes, old_index, new_index, old_, new_) {
+                do {
+                  old_ = old_nodes[old_index];
+                  new_ = new_nodes[new_index];
+
+                  if (old_ instanceof Array) {
+                    Replace_nodes(old_, new_nodes, 0, new_index);
+                    new_index = new_nodes.length;
+                    old_index++;
+                    continue;
+                  } else if (new_ instanceof Array) {
+                    Replace_nodes(old_nodes, new_, old_index, 0);
+                    old_index = old_nodes.length;
+                    new_index++;
+                    continue;
+                  } else {
+                    if (old_) {
+                      if (last_node) {
+                        last_node.Remove();
+                      }
+
+                      last_node = old_;
                     }
 
-                    last_node = old_;
+                    if (new_) {
+                      last_node.insert(new_, "before");
+                    }
                   }
 
-                  if (new_) {
-                    last_node.insert(new_, "before");
-                  }
-                }
+                  old_index++;
+                  new_index++;
+                } while (old_ || new_);
+              }
 
-                old_index++;
-                new_index++;
-              } while (old_ || new_);
+              Replace_nodes(old_nodes, new_nodes, 0, 0);
+              last_node.Remove();
             }
+          });
+        } catch (e) {}
 
-            Replace_nodes(old_nodes, new_nodes, 0, 0);
-            last_node.Remove();
-          }
-        });
-      } catch (e) {}
+        return value;
+      });
+      return reduced;
+    }
 
-      return value;
-    });
-    return reduced;
-  }
-
-  return function (HTML_NODE, ATTRIBUTE) {
-    register.HTML_NODE = HTML_NODE;
-    register.ATTRIBUTE = ATTRIBUTE;
     return ATTRIBUTE ? REGISTER_NODE(register) : get_NODES();
   };
 }
