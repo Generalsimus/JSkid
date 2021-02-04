@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.15 (c) soso
+    v1.2.16 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -8,40 +8,6 @@
 /* PrismJS 1.23.0
 https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript+jsx+scss */
 function KD_G(REGISTER_NODE) {
-  function Replace_nodes(old_nodes, new_nodes, old_index, new_index, old_, new_) {
-    do {
-      old_ = old_nodes[old_index];
-      new_ = new_nodes[new_index];
-
-      if (old_ instanceof Array) {
-        Replace_nodes(old_, new_nodes, 0, new_index);
-        new_index = new_nodes.length;
-        old_index++;
-        continue;
-      } else if (new_ instanceof Array) {
-        Replace_nodes(old_nodes, new_, old_index, 0);
-        old_index = old_nodes.length;
-        new_index++;
-        continue;
-      } else {
-        if (old_) {
-          if (last_node) {
-            last_node.Remove();
-          }
-
-          last_node = old_;
-        }
-
-        if (new_) {
-          last_node.insert(new_, "before");
-        }
-      }
-
-      old_index++;
-      new_index++;
-    } while (old_ || new_);
-  }
-
   return function (HTML_NODE, ATTRIBUTE) {
     var register_LIST = [],
         EXIST_NODES;
@@ -92,6 +58,41 @@ function KD_G(REGISTER_NODE) {
               var old_nodes = EXIST_NODES,
                   new_nodes = get_NODES(),
                   last_node;
+
+              function Replace_nodes(old_nodes, new_nodes, old_index, new_index, old_, new_) {
+                do {
+                  old_ = old_nodes[old_index];
+                  new_ = new_nodes[new_index];
+
+                  if (old_ instanceof Array) {
+                    Replace_nodes(old_, new_nodes, 0, new_index);
+                    new_index = new_nodes.length;
+                    old_index++;
+                    continue;
+                  } else if (new_ instanceof Array) {
+                    Replace_nodes(old_nodes, new_, old_index, 0);
+                    old_index = old_nodes.length;
+                    new_index++;
+                    continue;
+                  } else {
+                    if (old_) {
+                      if (last_node) {
+                        last_node.Remove();
+                      }
+
+                      last_node = old_;
+                    }
+
+                    if (new_) {
+                      last_node.insert(new_, "before");
+                    }
+                  }
+
+                  old_index++;
+                  new_index++;
+                } while (old_ || new_);
+              }
+
               Replace_nodes(old_nodes, new_nodes, 0, 0);
               last_node.Remove();
             }
