@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.18 (c) soso
+    v1.2.19 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -213,8 +213,6 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
   window.location.params = {};
 
   function KD_node(createEl, KD_T_SVG, KD_NODES) {
-    console.log(KD_T_SVG);
-
     function KD_el(r, NODE, created) {
       for (var prop in r) {
         if (NODE) {
@@ -289,7 +287,6 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
 
   var KD_NODES = {
     svg: function (r, n, createEl, KD_el, KD_SVG) {
-      console.log(arguments);
       return KD_SVG ? KD_SVG(null, r) : KD_el(r, undefined, createEl("svg"));
     },
     switch: function (r, prop, createEl, KD_el) {
