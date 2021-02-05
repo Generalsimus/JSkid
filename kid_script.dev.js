@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.17 (c) soso
+    v1.2.18 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -374,6 +374,10 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
   KD_ = KD_node(document.createElement.bind(document), KD_node(function (name) {
     return document.createElementNS('http://www.w3.org/2000/svg', name);
   }, undefined, KD_NODES), KD_NODES);
+  KD_.render = KD_;
+  KD_.style = KD_(document.head, {
+    style: ''
+  });
 
   KD_.assign = function () {
     try {
