@@ -1,11 +1,35 @@
 /*! KID.js 
-    v1.2.19 (c) soso
+    v1.2.2 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
-
 */
 (function () {
+  Object.defineProperties(Object.prototype, {
+    useListener: {
+      value: function (PROP, FUNCTION) {
+        var descriptor = Object.getOwnPropertyDescriptor(this, PROP),
+            value = this[PROP];
+        FUNCTION = FUNCTION.bind(this);
+        Object.defineProperty(this, PROP, {
+          get: function () {
+            return value;
+          },
+          set: function (new_v) {
+            value = new_v;
+
+            if (descriptor.set) {
+              descriptor.set(new_v);
+            }
+
+            FUNCTION(new_v, PROP);
+          }
+        });
+        return "event";
+      }
+    }
+  });
+
   KD_G = function KD_G(REGISTER_NODE) {
     return function (HTML_NODE, ATTRIBUTE) {
       var register_LIST = [],
