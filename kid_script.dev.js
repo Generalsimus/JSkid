@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.2 (c) soso
+    v1.2.3 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -18,13 +18,12 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
             return value;
           },
           set: function (new_v) {
-            value = new_v;
-
             if (descriptor.set) {
               descriptor.set(new_v);
             }
 
-            FUNCTION(new_v, PROP);
+            FUNCTION(new_v, PROP, value);
+            value = new_v;
           }
         });
         return "event";
