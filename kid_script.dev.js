@@ -1,5 +1,5 @@
 /*! KID.js 
-    v1.2.3 (c) soso
+    v1.2.4 (c) soso
     MIT License
     
     (っ◔◡◔)っ ♥ JSkid ♥ https://github.com/Generalsimus/JSkid
@@ -7,6 +7,10 @@
 /* PrismJS 1.23.0
 https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript+jsx+scss */
 (function () {
+  function KD_v(v, n, a) {
+    return typeof v == "function" ? KD_v(v(n, true, KD_G), n, a) : v;
+  }
+
   Object.defineProperties(Object.prototype, {
     useListener: {
       value: function (PROP, FUNCTION) {
@@ -31,119 +35,114 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
     }
   });
 
-  KD_G = function KD_G(REGISTER_NODE) {
-    return function (HTML_NODE, ATTRIBUTE) {
-      var register_LIST = [],
-          EXIST_NODES;
+  function KD_G(REGISTER_NODE) {
+    var EXIST_NODES,
+        EXIST_VALUES,
+        EXIST_ATTRIBUTE,
+        EXIST_HTML_NODE,
+        REGISTER_LIST = new Map();
 
-      function get_NODES() {
-        var REGISTER_VALUE = REGISTER_NODE(register);
-        return EXIST_NODES = KD_(null, REGISTER_VALUE instanceof Array ? REGISTER_VALUE.length ? REGISTER_VALUE : [""] : [REGISTER_VALUE]);
+    function get_Values() {
+      var REGISTER_VALUE = REGISTER_NODE(register);
+      return EXIST_VALUES = REGISTER_VALUE instanceof Array ? REGISTER_VALUE.length ? REGISTER_VALUE : [""] : [REGISTER_VALUE];
+    }
+
+    var last_node;
+
+    function map_Cilds(val1, nod2, _index, node_list, value, node) {
+      while (value = val1[_index], node = nod2[_index], _index < val1.length || _index < nod2.length) {
+        if (value instanceof Array) {
+          node_list[_index] = map_Cilds(value, [].concat(node), 0, []);
+        } else if (node instanceof Array) {
+          node_list[_index] = map_Cilds([].concat(value), node, 0, [])[0];
+        } else {
+          if (node) {
+            if (_index < val1.length) {
+              value = KD_v(value, node.parentNode);
+
+              if (node.KD_OBJECT === value) {
+                node_list[_index] = last_node = node;
+              } else {
+                node_list[_index] = last_node = node.Replace(value);
+              }
+            } else {
+              node.Remove();
+            }
+          } else if (_index < val1.length) {
+            node_list[_index] = last_node = last_node.insert(value, "after");
+          }
+        }
+
+        _index++;
       }
 
-      function register() {
-        var reduced = Array.prototype.reduce.call(arguments, function (o, prop) {
-          var value = o[prop];
-          value = typeof value == "function" ? value.bind(o) : value;
+      ;
+      return node_list;
+    }
 
-          for (var reg in register_LIST) {
-            var el = register_LIST[reg];
+    function register() {
+      return Array.prototype.reduce.call(arguments, function (o, prop) {
+        var value = o[prop],
+            registered = REGISTER_LIST.get(o);
 
-            if (el.o == o && el.p == prop) {
-              return value;
-            }
+        if (registered) {
+          if (registered.indexOf(prop) > -1) {
+            return value;
           }
 
-          register_LIST.push({
-            o: o,
-            p: prop
-          });
-          var descriptor = Object.getOwnPropertyDescriptor(o, prop);
+          registered.push(prop);
+        } else {
+          REGISTER_LIST.set(o, [prop]);
+        }
 
-          try {
-            Object.defineProperty(o, prop, {
-              enumerable: true,
-              configurable: true,
-              get: function () {
-                return value;
-              },
-              set: function (new_v) {
-                value = new_v;
+        value = typeof value == "function" ? value.bind(o) : value;
+        var descriptor = Object.getOwnPropertyDescriptor(o, prop);
 
-                if (descriptor.set) {
-                  descriptor.set(new_v);
-                }
+        try {
+          Object.defineProperty(o, prop, {
+            enumerable: true,
+            configurable: true,
+            get: function () {
+              return value;
+            },
+            set: function (new_v) {
+              value = new_v;
 
-                if (ATTRIBUTE) {
-                  HTML_NODE.setAttr(ATTRIBUTE, REGISTER_NODE(register));
-                  return;
-                }
-
-                var old_nodes = EXIST_NODES,
-                    new_nodes = get_NODES(),
-                    last_node;
-
-                function Replace_nodes(old_nodes, new_nodes, old_index, new_index, old_, new_) {
-                  do {
-                    old_ = old_nodes[old_index];
-                    new_ = new_nodes[new_index];
-
-                    if (old_ instanceof Array) {
-                      Replace_nodes(old_, new_nodes, 0, new_index);
-                      new_index = new_nodes.length;
-                      old_index++;
-                      continue;
-                    } else if (new_ instanceof Array) {
-                      Replace_nodes(old_nodes, new_, old_index, 0);
-                      old_index = old_nodes.length;
-                      new_index++;
-                      continue;
-                    } else {
-                      if (old_) {
-                        if (last_node) {
-                          last_node.Remove();
-                        }
-
-                        last_node = old_;
-                      }
-
-                      if (new_) {
-                        last_node.insert(new_, "before");
-                      }
-                    }
-
-                    old_index++;
-                    new_index++;
-                  } while (old_ || new_);
-                }
-
-                Replace_nodes(old_nodes, new_nodes, 0, 0);
-                last_node.Remove();
+              if (descriptor.set) {
+                descriptor.set(new_v);
               }
-            });
-          } catch (e) {}
 
-          return value;
-        });
-        return reduced;
-      }
+              if (EXIST_ATTRIBUTE) {
+                EXIST_HTML_NODE.setAttr(EXIST_ATTRIBUTE, REGISTER_NODE(register));
+              } else {
+                EXIST_NODES = map_Cilds(get_Values(), EXIST_NODES, 0, []);
+              }
+            }
+          });
+        } catch (e) {}
 
-      return ATTRIBUTE ? REGISTER_NODE(register) : get_NODES();
+        return value;
+      });
+    }
+
+    return function (HTML_NODE, ATTRIBUTE) {
+      EXIST_ATTRIBUTE = ATTRIBUTE;
+      EXIST_HTML_NODE = HTML_NODE;
+      return ATTRIBUTE ? REGISTER_NODE(register) : EXIST_NODES = KD_(null, get_Values());
     };
-  };
+  }
 
   var KD_method = {
     getAttr: function (a) {
       return this.getAttribute(a);
     },
-    setAttr: function () {
+    setAttr: function (attribute, value) {
       var i = 1;
 
-      while (arguments[i]) {
-        var attribute = arguments[i - 1],
-            value = arguments[i];
-        typeof value == "function" ? this.setAttr(attribute, value(this, attribute)) : KD_method[attribute] ? this[attribute](value, attribute, this) : this.setAttribute(attribute, value);
-        i++;
+      while (attribute = arguments[i - 1]) {
+        value = arguments[i];
+        typeof value == "function" ? this.setAttr(attribute, value(this, attribute, KD_G)) : KD_method[attribute] ? this[attribute](value, attribute, this) : this.setAttribute(attribute, value);
+        i += 2;
       }
 
       return this;
@@ -209,9 +208,11 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
     },
     Remove: function () {
       this.Parent().removeChild(this);
+      return this;
     },
     Replace: function (t) {
-      this.parentNode.replaceChild(KD_(null, t), this);
+      t = KD_(null, KD_v(t, this.parentNode));
+      this.parentNode.replaceChild(t, this);
       return t;
     },
     insert: function (o, m) {
@@ -219,15 +220,24 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
         case "after":
           var n = this.nextSibling,
               p = this.Parent();
-          n ? p.insertBefore(KD_(null, o), n) : p.Append(o);
+
+          if (n) {
+            m = KD_(null, KD_v(o, p));
+            p.insertBefore(m, n);
+            return m;
+          } else {
+            return p.Append(o);
+          }
+
           break;
 
         case "before":
-          this.Parent().insertBefore(KD_(null, o), this);
+          p = this.Parent();
+          m = KD_(null, KD_v(o, p));
+          p.insertBefore(m, this);
+          return m;
           break;
       }
-
-      return this;
     },
     Restart: function (v) {
       this.Replace(KD_(null, this.KD_OBJECT));
@@ -269,11 +279,17 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
           });
 
         case "Function":
-          return KD_T(p, s(p));
+          return KD_T(p, s(p, null, KD_G));
 
         case "Object":
           n = KD_el(s);
           break;
+
+        case "Promise":
+          s.then(function (v) {
+            n.Replace(v);
+          });
+          s = "";
 
         case "Number":
         case "Undefined":
@@ -302,10 +318,6 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
     }
 
     return KD_T;
-  }
-
-  function KD_v(v) {
-    return typeof v == "function" ? v(undefined, true) : v;
   }
 
   var KD_NODES = {
@@ -1229,8 +1241,6 @@ try {
       }
     });
     window.addEventListener('error', function (event) {
-      console.log(event);
-
       function flat(a) {
         return a instanceof Array ? a.reduce(function (c, v) {
           return c.concat(flat(v));
@@ -1246,7 +1256,7 @@ try {
           var l_c_reg = /(:(\d*):(\d*))$/g,
               line_coll = last_url.match(l_c_reg)[0].slice(1).split(":").map(Number),
               full_url = last_url.replace(l_c_reg, "");
-          path = new URL(full_url).pathname;
+          path = decodeURIComponent(new URL(full_url).pathname);
           return {
             path: path,
             line_coll,
@@ -1260,7 +1270,7 @@ try {
       error_data = error_data.findIndex(function (v) {
         return v.path == error_path;
       }) < 0 ? [{
-        path: new URL(event.filename).pathname,
+        path: decodeURIComponent(new URL(event.filename).pathname),
         line_coll: [event.lineno, event.colno],
         error_cod: event.message
       }].concat(error_data) : error_data;
